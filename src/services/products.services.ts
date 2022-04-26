@@ -17,7 +17,49 @@ const ProductsService = (Product=require('../models/Product.models').model) => {
                 else if(products.map(item => item.split(",")).find(obj=>obj.length!==3)){
                     throw "Invalid input: Incorrect format"
                 }
-               
+                // get all products currently in the database
+                const savedProducts: Product[] = await Product.find({}).lean()
+                // initialise counts for summary
+                let skipCount = 0
+                let unchangedCount = 0
+                let createdCount = 0
+                // create a list of promises to store create requests
+                const promises: Promise<unknown>[] = []
+                // loop through all rows and create new products for each valid row
+                products.map(async (product, index) => {
+                    const productArray = product.split(",")
+                    const sku = productArray[0]
+                    const colour = productArray[1]
+                    const size = productArray[2]
+                    // skip if there is a row missing
+                    if (sku === "" || colour === "" || size === "") {
+                        skipCount++
+                        console.log(`row ${index + 1} was skipped as a field was missing`)
+                    }
+                    // skip if row contains duplicate sku
+                    else if (products.map(item => item.split(",")[0]).filter(itemSku => itemSku === sku).length > 1) {
+                        skipCount++
+                        console.log(`row ${index + 1} was skipped as there are multiple products with the same sku`)
+                    }
+                    else {
+                        //check if product is already in the database. If so then it's unchanged. Otherwise, the product gets created
+                        if (savedProducts.find(item => item.sku === sku)) {
+                            unchangedCount++
+                        }
+                        else {
+                            promises.push(Product.create({ sku, colour, size }))
+                            createdCount++
+                        }
+                    }
+                })
+                // wait for any promises to complete then output
+                await Promise.all(promises)
+                console.log(`Summary:`)
+                console.log(`${skipCount} rows skipped`)
+                console.log(`${createdCount} products created`)
+                console.log(`${unchangedCount} products unchanged`)
+                return
+
             }
             catch (error) {
                 throw error
