@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc & node .",
-    "test": "tsc & jest"
+    "test": "tsc & jest",
+    "parsecsv":"tsc & ts-node src/parseCSV.ts"
   },
   "jest": {
     "testMatch": [
