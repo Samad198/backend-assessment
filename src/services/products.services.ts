@@ -5,6 +5,10 @@ const ProductsService = (Product=require('../models/Product.models').model) => {
             try {
                 const lines = csv.split("\n")
                 const products = lines.filter((item, index) => index !== 0)
+                // check for empty string
+                if (!csv) {
+                    throw "Invalid input: No input provided"
+                }
                 // check that it's got the valid fields
                 if (lines[0] !== "SKU,Colour,Size") {
                     throw "Invalid input: Incorrect format"

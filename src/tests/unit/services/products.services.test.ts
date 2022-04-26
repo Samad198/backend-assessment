@@ -74,6 +74,20 @@ describe("Product service tests", () => {
         catch (e) {
             expect(e).toEqual("Invalid input: Incorrect format");
         }
+        badData = ""
+        try {
+            await ProductService(mockProductModel).processCSV(badData)
+        }
+        catch (e) {
+            expect(e).toEqual("Invalid input: No input provided");
+        }
+        badData = "asdfsdfsd"
+        try {
+            await ProductService(mockProductModel).processCSV(badData)
+        }
+        catch (e) {
+            expect(e).toEqual("Invalid input: Incorrect format");
+        }
     })
 })
 
