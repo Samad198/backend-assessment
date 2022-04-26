@@ -36,6 +36,7 @@ Once the express server is running you should get the output ``Running on port 3
 - could use transactions to make sure all the data is stored or database is reverted
 - could use different method for checking a product exists in the database without having to get all products
 - need to add tests for api
+- need to write tests for and handle what happens if the database connection fails
 
 
 # Problems faced
