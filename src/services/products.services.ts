@@ -65,6 +65,16 @@ const ProductsService = (Product=require('../models/Product.models').model) => {
                 throw error
             }
         },
+        async getProducts({colour,size}:{colour:string,size:string}):Promise<Product[]> {
+            try {
+                const savedProducts = await Product.find().lean()
+                return savedProducts
+            }
+            catch (error) {
+                throw error
+            }
+
+        }
 
     }
 }
